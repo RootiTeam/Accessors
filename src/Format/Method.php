@@ -20,6 +20,7 @@ final class Method
     public const TYPE_ISSET = 'isset';
     public const TYPE_UNSET = 'unset';
     public const TYPE_WITH = 'with';
+    public const TYPE_TOSTRING = 'tostring';
 
     /** @var array<string, string> */
     public const TYPES
@@ -28,7 +29,8 @@ final class Method
             self::TYPE_SET   => self::TYPE_SET,
             self::TYPE_ISSET => self::TYPE_ISSET,
             self::TYPE_UNSET => self::TYPE_UNSET,
-            self::TYPE_WITH  => self::TYPE_WITH
+            self::TYPE_WITH  => self::TYPE_WITH,
+            self::TYPE_TOSTRING => self::TYPE_TOSTRING,
         ];
 
     /**

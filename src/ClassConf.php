@@ -57,6 +57,9 @@ final class ClassConf
     /** @var Closure */
     private Closure $isSetter;
 
+    /** @var */
+    private Closure $toString;
+
     /** @var bool */
     private bool $isAccessible;
 
@@ -146,6 +149,7 @@ final class ClassConf
             $this->setter = $this->createSetter();
             $this->isSetter = $this->createIssetter();
             $this->unSetter = $this->createUnsetter();
+            $this->toString = $this->createToString();
         } else {
             /* Attributes in non-Accessible classes have no effect */
             $this->attributes = new Attributes();
@@ -159,6 +163,7 @@ final class ClassConf
             $this->setter = $notAccessible;
             $this->isSetter = $notAccessible;
             $this->unSetter = $notAccessible;
+            $this->toString = $notAccessible;
         }
     }
 
@@ -249,6 +254,23 @@ final class ClassConf
             }
 
             return $object;
+        })->bindTo(null, $this->name);
+    }
+
+    private function createToString() : Closure
+    {
+        return (function (object $object) : string {
+            $outputString = ($className = get_class($object)) . ' (vars: (';
+            foreach (get_class_vars($className) as $propertyName => $value) {
+                $outputString .= $propertyName . ': ' . ($value ?? 'null') . ', ';
+            }
+
+            $outputString = substr($outputString, 0, -2) . '), methods: (';
+
+            foreach (get_class_methods($className) as $methodName) {
+                $outputString .= $methodName . '(), ';
+            }
+            return substr($outputString, 0, -2) . ')';
         })->bindTo(null, $this->name);
     }
 
@@ -351,6 +373,10 @@ final class ClassConf
         /** @var Format $attr */
         $attr = $classConf->attributes->get(Format::class);
         $format = $attr->instance();
+
+        if ($method === 'toString') {
+            return self::handleMagicToString($object);
+        }
 
         if (null !== ($parsedMethod = $format->matchCalled($method))) {
             $accessorMethod = $parsedMethod->type();
@@ -528,6 +554,13 @@ final class ClassConf
         }
 
         return $result;
+    }
+
+    public static function handleMagicToString(object $object) : string{
+        $classConf = self::findConf(get_class($object));
+        return ($classConf->toString)(
+            $object,
+        );
     }
 
     public static function handleMagicGet(object $object, string $propertyName): mixed

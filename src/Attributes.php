@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace margusk\Accessors;
 
-use margusk\Accessors\Attr\{Delete, Get, Immutable, Mutator, Set, Format};
+use margusk\Accessors\Attr\{Delete, Getter, Immutable, Mutator, Setter, Format, ToString};
 use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagNode;
 use ReflectionAttribute;
 use ReflectionClass;
@@ -27,12 +27,13 @@ class Attributes
     /** @var class-string[] */
     public const AVAILABLE_ATTR_NAMES
         = [
-            Get::class,
-            Set::class,
+            Getter::class,
+            Setter::class,
             Delete::class,
             Mutator::class,
             Immutable::class,
-            Format::class
+            Format::class,
+            ToString::class
         ];
 
     /** @var array<class-string, Attr|null> */

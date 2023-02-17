@@ -13,10 +13,11 @@ declare(strict_types=1);
 namespace margusk\Accessors;
 
 use margusk\Accessors\Attr\Delete;
-use margusk\Accessors\Attr\Get;
+use margusk\Accessors\Attr\Getter;
 use margusk\Accessors\Attr\Immutable;
 use margusk\Accessors\Attr\Mutator;
-use margusk\Accessors\Attr\Set;
+use margusk\Accessors\Attr\Setter;
+use margusk\Accessors\Attr\ToString;
 use margusk\Accessors\Exception\InvalidArgumentException;
 use ReflectionProperty;
 
@@ -50,6 +51,9 @@ class Property
     private bool $isUnsettable = false;
 
     /** @var bool */
+    private bool $isToStringable = false;
+
+    /** @var bool */
     private bool $isPublic;
 
     /**
@@ -71,9 +75,10 @@ class Property
                 ->mergeWithParent($classAttr);
 
             $this->isImmutable = ($this->attr->get(Immutable::class)?->enabled()) ?? false;
-            $this->isGettable = ($this->attr->get(Get::class)?->enabled()) ?? false;
-            $this->isSettable = ($this->attr->get(Set::class)?->enabled()) ?? false;
+            $this->isGettable = ($this->attr->get(Getter::class)?->enabled()) ?? false;
+            $this->isSettable = ($this->attr->get(Setter::class)?->enabled()) ?? false;
             $this->isUnsettable = ($this->attr->get(Delete::class)?->enabled()) ?? false;
+            $this->isToStringable = ($this->attr->get(ToString::class)?->enabled()) ?? false;
 
             /** @var ?Mutator $mutator */
             $mutator = $this->attr->get(Mutator::class);
@@ -168,6 +173,11 @@ class Property
     public function isUnsettable(): bool
     {
         return $this->isUnsettable;
+    }
+
+    public function isToStringable() : bool
+    {
+        return $this->isToStringable;
     }
 
     public function accessorEndpoint(string $accessorMethod): ?string

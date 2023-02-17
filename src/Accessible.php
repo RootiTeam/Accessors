@@ -28,6 +28,15 @@ trait Accessible
     {
         return ClassConf::handleMagicCall($this, $method, $args);
     }
+    
+    /**
+     * @return string
+     * @throws ReflectionException
+     */
+    public function __toString() : string
+    {
+        return ClassConf::handleMagicToString($this);
+    }
 
     /**
      * @param  string  $propertyName

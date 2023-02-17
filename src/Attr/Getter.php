@@ -17,6 +17,6 @@ use margusk\Accessors\Attr;
 
 /** @api */
 #[Attribute(Attribute::TARGET_PROPERTY | Attribute::TARGET_CLASS)]
-class Get extends Attr
+class Getter extends Attr
 {
 }
