@@ -122,10 +122,10 @@ echo $a->baz;  // Outputs "baz"
 If there's  lot's of properties to expose, then it's not reasonable to mark each one of them separately. Mark all properties at once in the class declaration:
 
 ```php
-use margusk\Accessors\Attr\Get;
+use margusk\Accessors\Attr\Getter;
 use margusk\Accessors\Accessible;
 
-#[Get]
+#[Getter]
 class A
 {
     use Accessible;
@@ -139,10 +139,10 @@ class A
 ```
 Now turn off readability of `$baz`:
 ```php
-use margusk\Accessors\Attr\Get;
+use margusk\Accessors\Attr\Getter;
 use margusk\Accessors\Accessible;
 
-#[Get]
+#[Getter]
 class A
 {
     use Accessible;
@@ -151,7 +151,7 @@ class A
 
     protected string $bar = "bar";
 
-    #[Get(false)]
+    #[Getter(false)]
     protected string $baz = "baz";
 }
 $a = new A();
@@ -159,15 +159,15 @@ echo $a->getFoo();   // Outputs "foo"
 echo $a->getBar();   // Outputs "bar"
 echo $a->getBaz();   // Results in Exception
 ```
-What about writing to properties? Yes, just add `#[Set]` attribute:
+What about writing to properties? Yes, just add `#[Setter]` attribute:
 
 ```php
 use margusk\Accessors\Attr\{
-    Get, Set
+    Getter, Setter
 };
 use margusk\Accessors\Accessible;
 
-#[Get,Set]
+#[Getter,Setter]
 class A
 {
     use Accessible;
@@ -227,11 +227,11 @@ With `#[Immutable]` attribute things get simpler:
 
 ```php
 use margusk\Accessors\Attr\{
-    Get, Set, Immutable
+    Getter, Setter, Immutable
 };
 use margusk\Accessors\Accessible;
 
-#[Get,Set,Immutable]
+#[Getter,Setter,Immutable]
 class A
 {
     use Accessible;
@@ -285,12 +285,12 @@ The internals of inheritance is illustrated with following example:
 
 ```php
 use margusk\Accessors\Attr\{
-    Get, Set
+    Getter, Setter
 };
 use margusk\Accessors\Accessible;
 
 // Class A makes all it's properties readable/writable by default
-#[Get(true),Set(true)]
+#[Getter(true),Setter(true)]
 class A
 {
     use Accessible;
@@ -299,8 +299,8 @@ class A
 }
 
 // Class B inherits implicit #[Get(true)] from parent class but disables explicitly
-// write access for all it's properties with #[Set(false)]
-#[Set(false)]
+// write access for all it's properties with #[Setter(false)]
+#[Setter(false)]
 class B extends A
 {
     protected string $bar = "bar";
@@ -329,11 +329,11 @@ Following rules apply when dealing with case-sensitivity in property names:
 
 ```php
 use margusk\Accessors\Attr\{
-    Get, Set
+    Getter, Setter
 };
 use margusk\Accessors\Accessible;
 
-#[Get,Set]
+#[Getter,Setter]
 class A
 {
     use Accessible;
@@ -364,7 +364,7 @@ To inform static code parsers about availability of magic methods and properties
 
 ```php
 use margusk\Accessors\Accessible;
-use margusk\Accessors\Attr\{Get, Set};
+use margusk\Accessors\Attr\{Getter, Setter};
 
 /**
  * @property        string $foo
@@ -378,7 +378,7 @@ class A
 {
     use Accessible;
 
-    #[Get,Set]
+    #[Getter,Setter]
     protected string $foo = "foo";
     #[Get]
     protected string $bar = "bar";
@@ -431,12 +431,12 @@ use margusk\Accessors\Attr\{
 };
 use margusk\Accessors\Accessible;
 
-#[Get]
+#[Getter]
 class A
 {
     use Accessible;
 
-    #[Set,Mutator("htmlspecialchars")]
+    #[Setter,Mutator("htmlspecialchars")]
     protected string $foo;
 }
 
@@ -463,11 +463,11 @@ Current library can make use of any manually created accessor methods with prefi
 For example, this allows seamless integration where current library provides _direct assignment syntax_ on top of existing _method syntax_:
 ```php
 use margusk\Accessors\Attr\{
-    Get, Set
+    Getter, Setter
 };
 use margusk\Accessors\Accessible;
 
-#[Get,Set]
+#[Getter,Setter]
 class A
 {
     use Accessible;
@@ -520,7 +520,7 @@ Following example turns _camel-case_ methods into _snake-case_:
 
 ```php
 use margusk\Accessors\Attr\{
-    Get, Set, Format
+    Getter, Setter, Format
 };
 use margusk\Accessors\Format\Method;
 use margusk\Accessors\Format\Standard;
@@ -550,7 +550,7 @@ class SnakeCaseFmt extends Standard
     }
 }
 
-#[Get,Set,Format(SnakeCaseFmt::class)]
+#[Getter,Setter,Format(SnakeCaseFmt::class)]
 class A
 {
     use Accessible;
@@ -611,9 +611,10 @@ If youre not sure, then stick with Attributes. They always work.
 2. Configure with following attributes:
     *  Use `#[Get]`, `#[Set]` and/or `#[Delete]` (from namespace `margusk\Accessors\Attr`) before the declaration of the property or whole you want to expose:
         * All them take optional `bool` parameter which can be set to `false` to deny specific accessor for the property or whole class. This is useful in situtations where override from previous setting is needed.
-        * `#[Get(bool $enabled = true)]`: allow or disable read access to property. Works in conjunction with allowing/denying `isset` on property.
-        * `#[Set(bool $enabled = true)]`: allow or disable to write access the property.
+        * `#[Getter(bool $enabled = true)]`: allow or disable read access to property. Works in conjunction with allowing/denying `isset` on property.
+        * `#[Setter(bool $enabled = true)]`: allow or disable to write access the property.
         * `#[Delete(bool $enabled = true)]`: allow or disable `unset()` of the property.
+        * `#[ToString(bool $enabled = true)]`: convert class to string.
     * `#[Mutator(string|array|null $callback)]`:
         * the `$callback` parameter works almost like `callable` but with a tweak in `string` type:
         * if `string` type is used then it must contain regular function name or syntax `$this->someMutatorMethod` implies instance method.
