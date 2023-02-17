@@ -88,20 +88,20 @@ This has boilerplate code just to make 3 properties readable. In case there are 
 By using `Accessible` trait this class can be rewritten:
 
 ```php
-use margusk\Accessors\Attr\Get;
+use margusk\Accessors\Attr\Getter;
 use margusk\Accessors\Accessible;
 
 class A
 {
     use Accessible;
 
-    #[Get]
+    #[Getter]
     protected string $foo = "foo";
 
-    #[Get]
+    #[Getter]
     protected string $bar = "bar";
 
-    #[Get]
+    #[Getter]
     protected string $baz = "baz";
 }
 
@@ -191,10 +191,10 @@ When talking about immutability, then it usually means combination of restrictin
 
 Consider the following example:
 ```php
-use margusk\Accessors\Attr\Get;
+use margusk\Accessors\Attr\Getter;
 use margusk\Accessors\Accessible;
 
-#[Get]
+#[Getter]
 class A
 {
     use Accessible;
@@ -380,7 +380,7 @@ class A
 
     #[Getter,Setter]
     protected string $foo = "foo";
-    #[Get]
+    #[Getter]
     protected string $bar = "bar";
 }
 $a = new A();
@@ -398,7 +398,7 @@ use margusk\Accessors\Attr\{
 };
 use margusk\Accessors\Accessible;
 
-#[Get]
+#[Getter]
 class A
 {
     use Accessible;
@@ -427,7 +427,7 @@ With _setters_, it's sometimes necessary to have the assignable value passed thr
 
 ```php
 use margusk\Accessors\Attr\{
-    Get, Set, Mutator
+    Getter, Setter, Mutator
 };
 use margusk\Accessors\Accessible;
 
@@ -609,7 +609,7 @@ If youre not sure, then stick with Attributes. They always work.
 
 1. Use `margusk\Accessors\Accessible` trait inside the class which properties you want to expose.
 2. Configure with following attributes:
-    *  Use `#[Get]`, `#[Set]` and/or `#[Delete]` (from namespace `margusk\Accessors\Attr`) before the declaration of the property or whole you want to expose:
+    *  Use `#[Getter]`, `#[Setter]` and/or `#[Delete]` (from namespace `margusk\Accessors\Attr`) before the declaration of the property or whole you want to expose:
         * All them take optional `bool` parameter which can be set to `false` to deny specific accessor for the property or whole class. This is useful in situtations where override from previous setting is needed.
         * `#[Getter(bool $enabled = true)]`: allow or disable read access to property. Works in conjunction with allowing/denying `isset` on property.
         * `#[Setter(bool $enabled = true)]`: allow or disable to write access the property.
