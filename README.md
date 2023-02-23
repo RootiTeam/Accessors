@@ -659,7 +659,3 @@ Notes:
 
 ## License
 This library is released under the MIT License.
-<<<<<<< HEAD
-
-=======
->>>>>>> 3c5d056b47d1b93779fa02214052bbabd88f37fe
