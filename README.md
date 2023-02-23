@@ -615,6 +615,8 @@ If youre not sure, then stick with Attributes. They always work.
         * `#[Setter(bool $enabled = true)]`: allow or disable to write access the property.
         * `#[Delete(bool $enabled = true)]`: allow or disable `unset()` of the property.
         * `#[ToString(bool $enabled = true)]`: convert class to string.
+        * `#[NotCloneable(bool $enabled = true)]`: does not allow class to be cloned.
+        * `#[NotSerializable(bool $enabled = true)]`: does not allow class to be serialized.
     * `#[Mutator(string|array|null $callback)]`:
         * the `$callback` parameter works almost like `callable` but with a tweak in `string` type:
         * if `string` type is used then it must contain regular function name or syntax `$this->someMutatorMethod` implies instance method.
