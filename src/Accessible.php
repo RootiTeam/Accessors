@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace margusk\Accessors;
 
 use ReflectionException;
+use LogicException;
 
 /** @api */
 trait Accessible
@@ -33,8 +34,7 @@ trait Accessible
      * @return string
      * @throws ReflectionException
      */
-    public function __toString() : string
-    {
+    public function __toString() : string{
         return ClassConf::handleMagicToString($this);
     }
 
@@ -81,5 +81,30 @@ trait Accessible
     public function __unset(string $propertyName): void
     {
         ClassConf::handleMagicUnset($this, $propertyName);
+    }
+
+    /**  
+     * @return void
+     * @throws LogicException
+     */
+    public function __clone() : void{
+        ClassConf::handleMagicClone($this);
+    }
+
+    /**  
+     * @return array
+     * @throws LogicException
+     */
+    public function __serialize() : array{
+        ClassConf::handleMagicSerialize($this);
+    }
+
+    /**  
+     * @param  array  $data
+     * @return void
+     * @throws LogicException
+     */
+    public function __unserialize(array $data) : void{
+        ClassConf::handleMagicUnserialize($this);
     }
 }

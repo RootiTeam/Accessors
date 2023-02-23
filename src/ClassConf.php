@@ -14,13 +14,14 @@ namespace margusk\Accessors;
 
 use Closure;
 use margusk\Accessors\Accessible\WithPHPDocs as AccessibleWithPHPDocs;
-use margusk\Accessors\Attr\{Immutable, Format};
+use margusk\Accessors\Attr\{Immutable, Format, NotCloneable, NotSerializable};
 use margusk\Accessors\Exception\BadMethodCallException;
 use margusk\Accessors\Exception\InvalidArgumentException;
 use margusk\Accessors\Format\Method;
 use margusk\Accessors\Format\Standard;
 use ReflectionClass;
 use ReflectionException;
+use LogicException;
 
 use function array_shift;
 use function call_user_func;
@@ -57,7 +58,7 @@ final class ClassConf
     /** @var Closure */
     private Closure $isSetter;
 
-    /** @var */
+    /** @var Closure */
     private Closure $toString;
 
     /** @var bool */
@@ -554,6 +555,28 @@ final class ClassConf
         }
 
         return $result;
+    }
+
+    public static function handleMagicUnserialize(object $object) : void{
+        $classConf = self::findConf($className = get_class($object));
+        if (($attr = $classConf->attributes->get(NotSerializable::class)) !== NULL && $attr->enabled()) {
+            throw new LogicException("Unserialization of " . $className . " objects is not allowed");
+        }
+    }
+
+    public static function handleMagicSerialize(object $object) : array{
+        $classConf = self::findConf($className = get_class($object));
+        if (($attr = $classConf->attributes->get(NotSerializable::class)) !== NULL && $attr->enabled()) {
+            throw new LogicException("Serialization of " . $className . " objects is not allowed");
+        }
+        return [];
+    }
+
+    public static function handleMagicClone(object $object) : void{
+        $classConf = self::findConf($className = get_class($object));
+        if (($attr = $classConf->attributes->get(NotCloneable::class)) !== NULL && $attr->enabled()) {
+            throw new LogicException("Cloning " . $className . " objects is not allowed");
+        }
     }
 
     public static function handleMagicToString(object $object) : string{

@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace margusk\Accessors;
 
-use margusk\Accessors\Attr\{Delete, Getter, Immutable, Mutator, Setter, Format, ToString};
+use margusk\Accessors\Attr\{Delete, Getter, Immutable, Mutator, Setter, Format, ToString, NotCloneable, NotSerializable};
 use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagNode;
 use ReflectionAttribute;
 use ReflectionClass;
@@ -33,7 +33,9 @@ class Attributes
             Mutator::class,
             Immutable::class,
             Format::class,
-            ToString::class
+            ToString::class,
+            NotCloneable::class,
+            NotSerializable::class
         ];
 
     /** @var array<class-string, Attr|null> */
@@ -75,9 +77,9 @@ class Attributes
     {
         /** @var array<class-string<Attr>, bool> $found */
         $found = match (strtolower($tagNode->name)) {
-            '@property' => [Get::class => true, Set::class => true],
-            '@property-read' => [Get::class => true, Set::class => false],
-            '@property-write' => [Get::class => false, Set::class => true],
+            '@property' => [Getter::class => true, Setter::class => true],
+            '@property-read' => [Getter::class => true, Setter::class => false],
+            '@property-write' => [Getter::class => false, Setter::class => true],
             default => []
         };
 

@@ -21,6 +21,8 @@ final class Method
     public const TYPE_UNSET = 'unset';
     public const TYPE_WITH = 'with';
     public const TYPE_TOSTRING = 'tostring';
+    public const TYPE_NOT_CLONEABLE = 'clone';
+    public const TYPE_NOT_SERIALIZABLE = 'serialize';
 
     /** @var array<string, string> */
     public const TYPES
@@ -31,6 +33,8 @@ final class Method
             self::TYPE_UNSET => self::TYPE_UNSET,
             self::TYPE_WITH  => self::TYPE_WITH,
             self::TYPE_TOSTRING => self::TYPE_TOSTRING,
+            self::TYPE_NOT_CLONEABLE => self::TYPE_NOT_CLONEABLE,
+            self::TYPE_NOT_SERIALIZABLE => self::TYPE_NOT_SERIALIZABLE
         ];
 
     /**

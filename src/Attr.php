@@ -19,7 +19,7 @@ abstract class Attr
     ) {
     }
 
-    public function enabled(): bool
+    public function enabled() : bool
     {
         return $this->enabled;
     }
